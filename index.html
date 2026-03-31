@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0d0d0d" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="IronLog" />
+  <title>IronLog</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html, body { background: #0d0d0d; height: 100%; }
+    #root { max-width: 420px; margin: 0 auto; min-height: 100vh; }
+    body {
+      font-family: 'Barlow Condensed', 'Arial Narrow', Arial, sans-serif;
+      background: #0d0d0d; color: #f0f0f0;
+    }
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    input:focus { border-color: #e63946 !important; outline: none; }
+    select:focus { outline: none; }
+
+    .icon-btn { background:#111;border:1px solid #1e1e1e;color:#f0f0f0;border-radius:8px;padding:8px 12px;font-size:16px;cursor:pointer;font-family:inherit; }
+    .finish-btn { background:#e63946;border:none;color:white;border-radius:8px;padding:8px 14px;font-size:14px;font-weight:800;cursor:pointer;letter-spacing:1px;font-family:inherit; }
+    .template-card { background:#111;border:1px solid #1e1e1e;color:#f0f0f0;border-radius:12px;padding:20px 12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;transition:all 0.15s;font-family:inherit;width:100%; }
+    .template-card:active { background:#1a1a1a;border-color:#e63946;transform:scale(0.97); }
+    .blank-btn { margin:16px;background:transparent;border:1px solid #222;color:#888;border-radius:8px;padding:12px;font-size:15px;font-family:inherit;cursor:pointer;letter-spacing:1px;width:calc(100% - 32px); }
+    .blank-btn:active { border-color:#e63946;color:#e63946; }
+    .ex-tab { background:#111;border:1px solid #1e1e1e;color:#888;border-radius:8px;padding:8px 10px;cursor:pointer;min-width:48px;font-family:inherit;flex-shrink:0;transition:all 0.15s; }
+    .ex-tab.active { border-color:#e63946;color:#f0f0f0; }
+    .ex-tab.add-ex { color:#e63946;font-size:18px;font-weight:700; }
+    .add-set-btn { background:#e63946;border:none;color:white;border-radius:8px;padding:10px 14px;font-size:20px;font-weight:700;cursor:pointer;font-family:inherit;height:44px;align-self:flex-end; }
+    .set-row { display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #1a1a1a; }
+    .del-btn { background:transparent;border:none;color:#333;cursor:pointer;font-size:18px;padding:0 4px; }
+    .del-btn:active { color:#e63946; }
+    .ex-picker-item { display:block;width:100%;text-align:left;background:transparent;border:none;border-bottom:1px solid #1a1a1a;color:#f0f0f0;padding:12px 8px;font-size:15px;font-family:inherit;cursor:pointer; }
+    .ex-picker-item:active { color:#e63946; }
+    .history-card { background:#111;border-radius:10px;padding:14px;margin-bottom:10px;border:1px solid #1a1a1a; }
+    .metric-btn { flex:1;background:#111;border:1px solid #1e1e1e;color:#666;border-radius:8px;padding:8px;font-size:13px;font-family:inherit;cursor:pointer;letter-spacing:0.5px; }
+    .metric-btn.active { background:#1a0a0a;border-color:#e63946;color:#e63946; }
+    .pr-banner { position:fixed;top:0;left:0;right:0;z-index:200;background:linear-gradient(135deg,#e63946,#c1121f);color:white;padding:14px 20px;display:flex;align-items:center;gap:10px;font-weight:800;font-size:14px;letter-spacing:0.5px;cursor:pointer;animation:slideDown 0.4s ease;max-width:420px;margin:0 auto; }
+    @keyframes slideDown { from{transform:translateY(-100%)} to{transform:translateY(0)} }
+
+    .edit-tpl-btn { position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.6);border:none;border-radius:6px;padding:4px 6px;font-size:14px;cursor:pointer;line-height:1; }
+    .icon-pick-btn { background:#111;border:1px solid #1e1e1e;border-radius:8px;padding:8px;font-size:22px;cursor:pointer;transition:all 0.15s; }
+    .icon-pick-btn.active { border-color:#e63946;background:#1a0a0a; }
+    .order-btn { background:transparent;border:none;color:#444;cursor:pointer;font-size:10px;padding:1px 3px;line-height:1;display:block; }
+    .order-btn:active { color:#e63946; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script src="app.js"></script>
+</body>
+</html>
