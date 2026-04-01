@@ -5,7 +5,7 @@ const ICONS = ["💪","⬆️","⬇️","🦵","🔥","⚡","🏋️","🎯","�
 
 // ── State ──────────────────────────────────────────────────────────────────
 let state = {
-  view: "home",        // home | workout | history | progress | editTemplate
+  view: "home",        // home | workout | history | progress | editTemplate | sessionDetail
   data: loadData(),
   session: null,
   activeExIdx: 0,
@@ -15,6 +15,7 @@ let state = {
   progressEx: "",
   progressMetric: "orm",
   editingTemplate: null,   // null = new, or template id
+  viewingSession: null,    // session object being viewed
 };
 let prTimer = null;
 
@@ -457,20 +458,98 @@ function renderHistory() {
       ...sessions.map(s => {
         const vol = (s.exercises||[]).reduce((a,e) => a + e.sets.reduce((b,st) => b + st.weight*st.reps, 0), 0);
         const totalSets = (s.exercises||[]).reduce((a,e) => a + e.sets.length, 0);
-        return div({ className:"history-card" },
+        return div({ className:"history-card", style:{ cursor:"pointer" }, onClick:() => setState({ view:"sessionDetail", viewingSession: s }) },
           div({ style:{ display:"flex", justifyContent:"space-between", alignItems:"flex-start" } },
             div({},
               div({ style:{ fontWeight:700 } }, s.templateName || "Séance libre"),
               div({ style:{ color:"#666", fontSize:12 } }, new Date(s.date).toLocaleDateString("fr-FR", { weekday:"long", day:"numeric", month:"long" }))
             ),
-            div({ style:{ textAlign:"right" } },
-              div({ style:{ color:"#e63946", fontWeight:700 } }, vol.toLocaleString() + " kg"),
-              div({ style:{ color:"#555", fontSize:12 } }, totalSets + " séries")
+            div({ style:{ display:"flex", alignItems:"center", gap:8 } },
+              div({ style:{ textAlign:"right" } },
+                div({ style:{ color:"#e63946", fontWeight:700 } }, vol.toLocaleString() + " kg"),
+                div({ style:{ color:"#555", fontSize:12 } }, totalSets + " séries")
+              ),
+              span({ style:{ color:"#333", fontSize:18 } }, "›")
             )
           ),
           div({ style:{ marginTop:8, display:"flex", flexWrap:"wrap", gap:4 } },
             ...(s.exercises||[]).map(e => span({ style:{ background:"#1a1a1a", color:"#666", borderRadius:4, padding:"2px 8px", fontSize:11 } }, e.name))
           )
+        );
+      })
+    )
+  );
+}
+
+// ── SESSION DETAIL ────────────────────────────────────────────────────────
+function renderSessionDetail() {
+  const s = state.viewingSession;
+  const totalVol = (s.exercises||[]).reduce((a,e) => a + e.sets.reduce((b,st) => b + st.weight*st.reps, 0), 0);
+  const totalSets = (s.exercises||[]).reduce((a,e) => a + e.sets.length, 0);
+
+  function deleteSession() {
+    delete state.data.sessions[s.id];
+    saveData();
+    setState({ view:"history", viewingSession:null, data: state.data });
+  }
+
+  return div({ style:{ display:"flex", flexDirection:"column", minHeight:"100vh" } },
+    // header
+    div({ style:{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"16px 16px 12px", borderBottom:"1px solid #1a1a1a", position:"sticky", top:0, background:"#0d0d0d", zIndex:10 } },
+      btn({ className:"icon-btn", onClick:() => setState({ view:"history", viewingSession:null }) }, "←"),
+      div({ style:{ textAlign:"center" } },
+        div({ style:{ fontWeight:800, fontSize:16 } }, s.templateName || "Séance libre"),
+        div({ style:{ color:"#666", fontSize:11 } }, new Date(s.date).toLocaleDateString("fr-FR", { weekday:"long", day:"numeric", month:"long" }))
+      ),
+      btn({ className:"del-session-btn", onClick: deleteSession }, "🗑")
+    ),
+
+    // summary strip
+    div({ style:{ display:"flex", justifyContent:"space-around", padding:"14px 0", borderBottom:"1px solid #1a1a1a", margin:"0 16px" } },
+      statBlock("Exercices", (s.exercises||[]).length),
+      statBlock("Séries", totalSets),
+      statBlock("Volume", totalVol.toLocaleString() + " kg")
+    ),
+
+    // exercises detail
+    div({ style:{ flex:1, overflowY:"auto", padding:"12px 16px" } },
+      ...(s.exercises||[]).map(ex => {
+        const exVol = ex.sets.reduce((a,st) => a + st.weight*st.reps, 0);
+        const bestOrm = ex.sets.reduce((best, st) => {
+          const orm = calcOneRM(+st.weight, +st.reps);
+          return orm > best ? orm : best;
+        }, 0);
+
+        return div({ style:{ marginBottom:16, background:"#111", borderRadius:10, overflow:"hidden", border:"1px solid #1a1a1a" } },
+          // exercise header
+          div({ style:{ display:"flex", justifyContent:"space-between", alignItems:"center", padding:"12px 14px", borderBottom:"1px solid #1a1a1a" } },
+            div({ style:{ fontWeight:800, fontSize:15 } }, ex.name),
+            div({ style:{ textAlign:"right" } },
+              div({ style:{ color:"#e63946", fontSize:12, fontWeight:700 } }, exVol.toLocaleString() + " kg vol."),
+              div({ style:{ color:"#555", fontSize:11 } }, "1RM ~" + bestOrm + "kg")
+            )
+          ),
+          // sets header
+          div({ style:{ display:"flex", padding:"6px 14px", borderBottom:"1px solid #1a1a1a" } },
+            div({ style:{ color:"#555", fontSize:11, letterSpacing:1, width:28 } }, "#"),
+            div({ style:{ color:"#555", fontSize:11, letterSpacing:1, flex:1 } }, "POIDS"),
+            div({ style:{ color:"#555", fontSize:11, letterSpacing:1, flex:1 } }, "REPS"),
+            div({ style:{ color:"#555", fontSize:11, letterSpacing:1, width:60, textAlign:"right" } }, "1RM EST.")
+          ),
+          // sets rows
+          ...ex.sets.map((set, si) => {
+            const orm = calcOneRM(+set.weight, +set.reps);
+            const isBest = orm === bestOrm;
+            return div({ style:{ display:"flex", alignItems:"center", padding:"9px 14px", borderBottom: si < ex.sets.length-1 ? "1px solid #161616" : "none", background: isBest ? "#1a0a0a" : "transparent" } },
+              div({ style:{ color:"#444", fontSize:13, width:28, fontWeight:700 } }, String(si+1)),
+              div({ style:{ flex:1, fontWeight:700, fontSize:15 } }, set.weight + " kg"),
+              div({ style:{ flex:1, fontWeight:700, fontSize:15 } }, String(set.reps)),
+              div({ style:{ width:60, textAlign:"right", color: isBest ? "#e63946" : "#555", fontSize:13, fontWeight: isBest ? 800 : 400 } },
+                orm + "kg",
+                isBest ? span({ style:{ fontSize:10, marginLeft:2 } }, "🏆") : null
+              )
+            );
+          })
         );
       })
     )
@@ -609,6 +688,7 @@ function render() {
     else if (state.view === "history") view = renderHistory();
     else if (state.view === "progress") view = renderProgress();
     else if (state.view === "editTemplate") view = renderEditTemplate();
+    else if (state.view === "sessionDetail") view = renderSessionDetail();
 
     if (view) root.appendChild(view);
   } catch(err) {
