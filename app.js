@@ -398,7 +398,12 @@ function renderHistory() {
                 div({ style:{ color:"#e63946", fontWeight:700 } }, vol.toLocaleString() + " kg"),
                 div({ style:{ color:"#666", fontSize:12 } }, totalSets + " séries")
               ),
-              span({ style:{ color:"#444", fontSize:20 } }, "›")
+              div({ style:{ display:"flex", flexDirection:"column", gap:4 } },
+                btn({ className:"icon-btn", style:{ padding:"5px 8px", fontSize:14, background:"#2c1215", borderColor:"#e63946" },
+                  onClick: e => { e.stopPropagation(); startEditSession(s); }
+                }, "✏️"),
+                span({ style:{ color:"#444", fontSize:20, textAlign:"center" } }, "›")
+              )
             )
           ),
           div({ style:{ marginTop:10, display:"flex", flexWrap:"wrap", gap:4 } },
