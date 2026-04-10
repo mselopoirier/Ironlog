@@ -111,6 +111,31 @@
     @keyframes slideDown { from{transform:translateY(-100%)} to{transform:translateY(0)} }
 
     .pr-card { display:flex; gap:14px; align-items:center; background:#1e1e1e; border:1.5px solid #e63946; border-radius:12px; padding:16px; margin-bottom:12px; }
+
+    /* Rest timer */
+    .rest-bar { position:relative; background:#1a1a1a; border-bottom:2px solid #2a2a2a; overflow:hidden; min-height:44px; }
+    .rest-bar-inner { position:absolute; left:0; top:0; bottom:0; background:linear-gradient(90deg,#2c1215,#3a1820); transition:width 1s linear; }
+    .rest-bar-content { position:relative; display:flex; align-items:center; justify-content:space-between; padding:8px 16px; z-index:1; }
+    .rest-quick-btn { background:#252525; border:1px solid #3a3a3a; color:#aaa; border-radius:6px; padding:4px 8px; font-size:12px; font-family:inherit; cursor:pointer; }
+    .rest-quick-btn:active { border-color:#e63946; color:#e63946; }
+
+    /* Quick action buttons */
+    .quick-btn { background:#1e1e1e; border:1px solid #2e2e2e; color:#888; border-radius:6px; padding:6px 10px; font-size:12px; font-family:inherit; cursor:pointer; white-space:nowrap; }
+    .quick-btn:active { border-color:#e63946; color:#e63946; }
+
+    /* Dashboard */
+    .dash-stat-card { background:#1e1e1e; border:1px solid #383838; border-radius:12px; padding:14px; text-align:center; }
+    .vol-trend-card { margin:14px 16px 0; background:#1e1e1e; border:1px solid #383838; border-left:4px solid #e63946; border-radius:10px; padding:14px 16px; }
+    .comparison-card { background:#1e1e1e; border:1px solid #383838; border-radius:10px; padding:14px; margin-bottom:14px; }
+    .muscle-tag { background:#2a1215; color:#e63946; border-radius:4px; padding:2px 7px; font-size:11px; margin-left:8px; border:1px solid #3a1215; }
+    .notes-input { width:100%; background:#1e1e1e; border:1.5px solid #3a3a3a; border-radius:8px; color:#aaa; padding:10px 12px; font-size:14px; font-family:inherit; resize:none; height:72px; }
+    .notes-display { background:#1e1e1e; border:1px solid #2e2e2e; border-radius:8px; padding:10px 12px; color:#888; font-size:13px; margin-bottom:12px; font-style:italic; }
+
+    /* Resume banner */
+    .resume-banner { margin:12px 16px 0; background:#2c1215; border:1.5px solid #e63946; border-radius:10px; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; cursor:pointer; }
+
+    /* Progress button in header */
+    .progress-nav-btn { background:transparent; border:none; color:#e63946; font-size:13px; font-family:inherit; cursor:pointer; text-decoration:underline; padding:0; }
   </style>
 </head>
 <body>
