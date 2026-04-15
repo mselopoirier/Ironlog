@@ -338,6 +338,7 @@ function renderHome() {
       div({}),
       div({ style:{ display:"flex", gap:8 } },
         btn({ className:"icon-btn", onClick:() => setState({ view:"dashboard" }) }, "📊"),
+        btn({ className:"icon-btn", onClick:() => setState({ view:"progress", progressEx: [...new Set(allSessions().flatMap(s => (s.exercises||[]).map(e => e.name)))][0] || "" }) }, "📈"),
         btn({ className:"icon-btn", onClick:() => setState({ view:"history" }) }, "📅")
       )
     ),
@@ -417,7 +418,8 @@ function renderDashboard() {
     pageHeader(
       btn({ className:"icon-btn", onClick:() => setState({ view:"home" }) }, "←"),
       div({ className:"page-title" }, "DASHBOARD"),
-      btn({ className:"icon-btn", style:{fontSize:13}, onClick: exportCSV }, "⬇ CSV")
+      btn({ className:"icon-btn", style:{fontSize:13}, onClick: exportCSV }, "⬇ CSV"),
+      btn({ className:"red-outline-btn", style:{fontSize:12}, onClick:() => setState({ view:"progress", progressEx: [...new Set(allSessions().flatMap(s=>(s.exercises||[]).map(e=>e.name)))][0]||"" }) }, "📈 Courbes")
     ),
     div({ style:{ flex:1, overflowY:"auto", padding:"12px 16px" } },
 
